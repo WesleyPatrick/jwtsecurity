@@ -21,6 +21,10 @@ spring:
 
 app:
   security:
+    jwt:
+      issuer: jwtsecurity
+      secret: ${JWT_SECRET}
+      access-minutes: 15
 
 logging:
   level:
