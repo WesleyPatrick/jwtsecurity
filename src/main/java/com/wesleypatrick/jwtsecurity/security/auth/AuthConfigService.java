@@ -1,4 +1,4 @@
-package com.wesleypatrick.jwtsecurity.config;
+package com.wesleypatrick.jwtsecurity.security.auth;
 
 import com.wesleypatrick.jwtsecurity.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;

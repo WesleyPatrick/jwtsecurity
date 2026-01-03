@@ -1,6 +1,6 @@
 package com.wesleypatrick.jwtsecurity.controller;
-import com.wesleypatrick.jwtsecurity.config.JwtProps;
-import com.wesleypatrick.jwtsecurity.config.JwtTokenService;
+import com.wesleypatrick.jwtsecurity.config.properties.JwtProps;
+import com.wesleypatrick.jwtsecurity.security.jwt.JwtTokenService;
 import com.wesleypatrick.jwtsecurity.controller.dto.CreateUserDto;
 import com.wesleypatrick.jwtsecurity.controller.dto.LoginRequestDto;
 import com.wesleypatrick.jwtsecurity.controller.dto.LoginResponse;
@@ -15,11 +15,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
@@ -57,8 +58,6 @@ public class AuthController {
         User user = (User) auth.getPrincipal();
         String token = jwtTokenService.generateToken(user);
 
-        System.out.println(user);
-
         return ResponseEntity.ok(new LoginResponse(token, jwtProps.accessMinutes() * SIXTY_SECONDS));
     }
 
@@ -77,4 +76,5 @@ public class AuthController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(userResponse);
     }
+
 }

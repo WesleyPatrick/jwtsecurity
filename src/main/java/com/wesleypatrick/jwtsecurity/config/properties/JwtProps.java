@@ -1,4 +1,4 @@
-package com.wesleypatrick.jwtsecurity.config;
+package com.wesleypatrick.jwtsecurity.config.properties;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

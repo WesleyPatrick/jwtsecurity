@@ -1,15 +1,15 @@
-package com.wesleypatrick.jwtsecurity.config;
+package com.wesleypatrick.jwtsecurity.security.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.wesleypatrick.jwtsecurity.config.properties.JwtProps;
 import com.wesleypatrick.jwtsecurity.model.User;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 @Component
 public class JwtTokenService {

@@ -1,6 +1,9 @@
-package com.wesleypatrick.jwtsecurity.config;
+package com.wesleypatrick.jwtsecurity.security.filter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.wesleypatrick.jwtsecurity.controller.dto.ErrorResponse;
+import com.wesleypatrick.jwtsecurity.security.jwt.JwtTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,8 +22,17 @@ public class SecurityFilter extends OncePerRequestFilter {
 
     private final JwtTokenService jwtTokenService;
 
+    ObjectMapper mapper = new ObjectMapper();
+
     public SecurityFilter(JwtTokenService jwtTokenService) {
         this.jwtTokenService = jwtTokenService;
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return path.startsWith("/auth")
+                || path.equals("/error");
     }
 
     @Override
@@ -49,7 +61,14 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         } catch (Exception e) {
             SecurityContextHolder.clearContext();
+
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            response.setContentType("application/json");
+            response.setCharacterEncoding("UTF-8");
+
+            var body = new ErrorResponse(401, "Token inválido ou expirado");
+            response.getWriter().write(mapper.writeValueAsString(body));
+            response.getWriter().flush();
         }
     }
 }
