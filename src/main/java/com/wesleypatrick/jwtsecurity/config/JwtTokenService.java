@@ -1,7 +1,9 @@
 package com.wesleypatrick.jwtsecurity.config;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import com.wesleypatrick.jwtsecurity.model.User;
 import org.springframework.stereotype.Component;
 
@@ -14,10 +16,12 @@ public class JwtTokenService {
 
     private JwtProps props;
     private Algorithm algorithm;
+    private JWTVerifier verifier;
 
-    public JwtTokenService(JwtProps props, Algorithm algorithm) {
+    public JwtTokenService(JwtProps props, Algorithm algorithm,  JWTVerifier verifier) {
         this.props = props;
         this.algorithm = algorithm;
+        this.verifier = verifier;
     }
 
     public String generateToken(User user) {
@@ -34,5 +38,9 @@ public class JwtTokenService {
                 .withClaim("email", user.getEmail())
                 .withClaim("role", user.getRole().name())
                 .sign(algorithm);
+    }
+
+    public DecodedJWT verifyToken(String token) {
+            return verifier.verify(token);
     }
 }

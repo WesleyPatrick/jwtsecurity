@@ -28,4 +28,6 @@ app:
 
 logging:
   level:
-    org.flywaydb: INFO
+    org.springframework.security: TRACE
+
+

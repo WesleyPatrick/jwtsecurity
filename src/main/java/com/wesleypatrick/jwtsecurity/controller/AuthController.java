@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final long SIXTY_SECONDS = 60;
+    private static final long SIXTY_SECONDS = 60;
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
@@ -69,6 +69,7 @@ public class AuthController {
         user.setEmail(req.email());
         user.setName(req.name());
         user.setRole(Role.USER);
+        user.setEnabled(true);
 
         userRepository.save(user);
 
