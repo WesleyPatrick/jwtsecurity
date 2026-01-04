@@ -40,7 +40,25 @@ public class JwtTokenService {
                 .sign(algorithm);
     }
 
+    public String generateRefreshToken(User user) {
+        Instant now = Instant.now();
+        Instant expiresAt = now.plus(props.refreshDays(), ChronoUnit.DAYS);
+
+        return JWT.create()
+                .withIssuer(props.issuer())
+                .withSubject(user.getEmail())
+                .withIssuedAt(now)
+                .withExpiresAt(expiresAt)
+                .withClaim("userId", user.getId().toString())
+                .withClaim("type", "refresh")
+                .sign(algorithm);
+    }
+
     public DecodedJWT verifyToken(String token) {
             return verifier.verify(token);
+    }
+
+    public boolean isRefreshToken(DecodedJWT jwt) {
+        return "refresh".equals(jwt.getClaim("type").asString());
     }
 }

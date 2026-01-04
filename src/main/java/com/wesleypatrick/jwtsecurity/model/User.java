@@ -38,6 +38,9 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private RefreshToken refreshToken;
+
     @Column(nullable = false)
     private boolean enabled;
 

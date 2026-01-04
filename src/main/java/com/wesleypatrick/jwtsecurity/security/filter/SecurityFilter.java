@@ -31,7 +31,13 @@ public class SecurityFilter extends OncePerRequestFilter {
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return path.startsWith("/auth")
+
+        return path.equals("/auth/login")
+                || path.equals("/auth/register")
+                || path.equals("/auth/refresh")
+                || path.startsWith("/v3/api-docs")
+                || path.startsWith("/swagger-ui")
+                || path.equals("/swagger-ui.html")
                 || path.equals("/error");
     }
 
@@ -39,7 +45,7 @@ public class SecurityFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String authorizationHeader = request.getHeader("Authorization");
-        if (authorizationHeader == null) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -66,7 +72,7 @@ public class SecurityFilter extends OncePerRequestFilter {
             response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
 
-            var body = new ErrorResponse(401, "Token inválido ou expirado");
+            var body = new ErrorResponse(401, "Token inválido ou expirado, erro: " + e.getMessage());
             response.getWriter().write(mapper.writeValueAsString(body));
             response.getWriter().flush();
         }
